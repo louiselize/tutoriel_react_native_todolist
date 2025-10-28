@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     elevation: 5,
   },
   text: {
-    fontSize: 21,
+    fontSize: 18,
     color: "#333",
   },
   image: {
