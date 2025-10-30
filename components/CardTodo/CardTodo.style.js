@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   card: {
     backgroundColor: "white",
-    display: "flex",
     flexDirection: "row",
     height: 75,
     borderRadius: 13,
