@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "./App.style";
 import { CardTodo } from "./components/CardTodo/CardTodo";
 import { Header } from "./components/Header/Header";
+import { TabBottomMenu } from "./components/TabBottomMenu/TabBottomMenu";
 
 export default function App() {
   const [todoList, setTodoList] = useState([
@@ -14,6 +15,8 @@ export default function App() {
     { id: 5, title: "Implement State Management", isCompleted: false },
     { id: 6, title: "Test on Real Devices", isCompleted: false },
   ]);
+  const [selectedTab, setSelectedTab] = useState("All");
+
   function renderTodoList() {
     return todoList.map((todo) => (
       <View style={styles.cardItem} key={todo.id}>
@@ -43,7 +46,7 @@ export default function App() {
         </SafeAreaView>
       </SafeAreaProvider>
       <View style={styles.footer}>
-        <Text>Footer</Text>
+        <TabBottomMenu onPress={setSelectedTab} selectedTab={selectedTab} />
       </View>
     </>
   );
