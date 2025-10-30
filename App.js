@@ -17,8 +17,20 @@ export default function App() {
   ]);
   const [selectedTab, setSelectedTab] = useState("All");
 
+  function getFilteredTodoList() {
+    switch (selectedTab) {
+      case "In Progress":
+        return todoList.filter((todo) => !todo.isCompleted);
+      case "Done":
+        return todoList.filter((todo) => todo.isCompleted);
+      case "All":
+      default:
+        return todoList;
+    }
+  }
+
   function renderTodoList() {
-    return todoList.map((todo) => (
+    return getFilteredTodoList().map((todo) => (
       <View style={styles.cardItem} key={todo.id}>
         <CardTodo onPress={updateTodo} todo={todo} />
       </View>
@@ -33,6 +45,7 @@ export default function App() {
 
     setTodoList(updatedTodoList);
   }
+
   return (
     <>
       <SafeAreaProvider>
@@ -46,7 +59,11 @@ export default function App() {
         </SafeAreaView>
       </SafeAreaProvider>
       <View style={styles.footer}>
-        <TabBottomMenu onPress={setSelectedTab} selectedTab={selectedTab} />
+        <TabBottomMenu
+          todoList={todoList}
+          onPress={setSelectedTab}
+          selectedTab={selectedTab}
+        />
       </View>
     </>
   );
