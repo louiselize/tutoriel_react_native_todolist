@@ -1,21 +1,19 @@
 import { useState } from "react";
 import { Alert, ScrollView, View } from "react-native";
+import Dialog from "react-native-dialog";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import uuid from "react-native-uuid";
 import { styles } from "./App.style";
+import { ButtonAdd } from "./components/ButtonAdd/ButtonAdd";
 import { CardTodo } from "./components/CardTodo/CardTodo";
 import { Header } from "./components/Header/Header";
 import { TabBottomMenu } from "./components/TabBottomMenu/TabBottomMenu";
 
 export default function App() {
-  const [todoList, setTodoList] = useState([
-    { id: 1, title: "Learn React Native", isCompleted: true },
-    { id: 2, title: "Build a Todo App", isCompleted: true },
-    { id: 3, title: "Master Flexbox", isCompleted: false },
-    { id: 4, title: "Explore React Navigation", isCompleted: false },
-    { id: 5, title: "Implement State Management", isCompleted: false },
-    { id: 6, title: "Test on Real Devices", isCompleted: false },
-  ]);
+  const [todoList, setTodoList] = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
+  const [isAddDialogVisible, setIsAddDialogVisible] = useState(false);
+  const [inputAddTodo, setInputAddTodo] = useState("");
 
   function getFilteredTodoList() {
     switch (selectedTab) {
@@ -62,6 +60,21 @@ export default function App() {
     setTodoList(updatedTodoList);
   }
 
+  function showAddDialog() {
+    setIsAddDialogVisible(true);
+  }
+
+  function addTodo() {
+    const newTodo = {
+      id: uuid.v4(),
+      title: inputAddTodo,
+      isCompleted: false,
+    };
+    setTodoList([...todoList, newTodo]);
+    setIsAddDialogVisible(false);
+    setInputAddTodo("");
+  }
+
   return (
     <>
       <SafeAreaProvider>
@@ -72,6 +85,7 @@ export default function App() {
           <View style={styles.body}>
             <ScrollView>{renderTodoList()}</ScrollView>
           </View>
+          <ButtonAdd onPress={showAddDialog} />
         </SafeAreaView>
       </SafeAreaProvider>
       <View style={styles.footer}>
@@ -81,6 +95,30 @@ export default function App() {
           selectedTab={selectedTab}
         />
       </View>
+      <Dialog.Container
+        visible={isAddDialogVisible}
+        onBackdropPress={() => setIsAddDialogVisible(false)}>
+        <Dialog.Title>Add New Todo</Dialog.Title>
+        <Dialog.Input
+          placeholder="Enter todo title"
+          onChangeText={(text) => {
+            setInputAddTodo(text);
+          }}
+        />
+        <Dialog.Button
+          label="Cancel"
+          onPress={() => {
+            setIsAddDialogVisible(false);
+          }}
+        />
+        <Dialog.Button
+          label="Add"
+          disabled={inputAddTodo.trim() === ""}
+          onPress={() => {
+            addTodo();
+          }}
+        />
+      </Dialog.Container>
     </>
   );
 }
